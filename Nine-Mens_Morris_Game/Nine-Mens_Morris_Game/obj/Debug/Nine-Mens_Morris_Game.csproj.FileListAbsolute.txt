@@ -1,0 +1,11 @@
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\bin\Debug\Nine-Mens_Morris_Game.exe.config
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\bin\Debug\Nine-Mens_Morris_Game.exe
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\bin\Debug\Nine-Mens_Morris_Game.pdb
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csprojAssemblyReference.cache
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.MainForm.resources
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.InputNameForm.resources
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.Properties.Resources.resources
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csproj.GenerateResource.cache
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csproj.CoreCompileInputs.cache
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.exe
+C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.pdb
