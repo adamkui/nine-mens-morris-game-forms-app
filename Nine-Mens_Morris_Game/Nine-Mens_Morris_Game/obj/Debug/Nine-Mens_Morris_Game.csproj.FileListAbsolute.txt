@@ -9,3 +9,15 @@ C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debu
 C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csproj.CoreCompileInputs.cache
 C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.exe
 C:\Users\addam\source\repos\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.pdb
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\bin\Debug\Nine-Mens_Morris_Game.exe.config
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\bin\Debug\Nine-Mens_Morris_Game.exe
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\bin\Debug\Nine-Mens_Morris_Game.pdb
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csprojAssemblyReference.cache
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.MainForm.resources
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.InputNameForm.resources
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.Properties.Resources.resources
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csproj.GenerateResource.cache
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.csproj.CoreCompileInputs.cache
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.exe
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine-Mens_Morris_Game.pdb
+D:\Programozás\C#\Nine-Mens-Morris-Game-FormsApp\Nine-Mens-Morris-Game-FormsApp\Nine-Mens_Morris_Game\Nine-Mens_Morris_Game\obj\Debug\Nine_Mens_Morris_Game.Component1.resources

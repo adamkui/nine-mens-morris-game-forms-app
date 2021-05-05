@@ -15,6 +15,18 @@ namespace Nine_Mens_Morris_Game
         public static Dictionary<int, int[]> oszlopRendezés = new Dictionary<int, int[]>();
         public static string[] bábúk = { "$", "O", "X" };
 
+        #region Hibaüzenetek
+        public static string e1 = "Hibás érték - Nem számot adtál meg!";
+        public static string e2 = "Hibás érték - Adj meg egy számot 1 és 24 között!";
+        public static string e3 = "Hibás érték - Kiütéshez használj az ellenfél által elfoglalt mezőt";
+        public static string e4 = "Hibás érték - A mező már foglalt";
+        public static string e5 = "Hibás érték - Ellépni csak a saját bábúddal tudsz";
+        public static string e6 = "Hibás érték - Lépni csak azonos sorban vagy oszlopban lehet szomszédos helyre";
+        public static string e7 = "Hibás érték - Nem lehet a kiindulási helyre lépni!";
+        public static string e8 = "Hibás érték - Lépni csak szomszédos helyre lehet";
+        public static string e9 = "Hibás érték - Az adott pontról nem lehet hova ellépni";
+        #endregion
+
         public class Játékos
         {
             public string név;
@@ -28,6 +40,171 @@ namespace Nine_Mens_Morris_Game
                 this.bábú = bábú;
                 this.bábúkSzáma = bábúkSzáma;
                 this.utolsóBábú = false;
+            }
+
+            public void LerakásKérdezz(bool kiütés)
+            {
+                int válasz;
+                string üzenet = kiütés ? $"{this.név}, adj meg egy számot kiütéshez" : $"{this.név}, adj meg egy számot";
+                MainForm mainForm = new MainForm();
+                mainForm.kérdés = üzenet;
+
+                if (mainForm.ShowDialog() == DialogResult.OK)
+                {
+                    string input = mainForm.textBox1.Text;
+                    válasz = VálaszValidálás(kiütés, false, false, input);
+                    pontok[válasz - 1].érték = kiütés ? bábúk[0] : this.bábú; //Tábla frissítése a játékos bábújával
+                    if (kiütés && malmok[this].Any(malom => malom.Contains(pontok[válasz - 1].név))) { this.malomRekordTörlés(válasz); }
+                }
+            }
+
+            public int VálaszValidálás(bool kiütés, bool lépegetés, bool másodikÉrték, string input, int honnan = 0)
+            {
+                bool számRendben;
+                int válasz;
+                do
+                {
+                    számRendben = int.TryParse(input, out válasz);
+                    if (!számRendben) { Console.WriteLine(e1); }
+                    if (számRendben && (válasz <= 0 || válasz >= 25)) { Console.WriteLine(e2); számRendben = false; }
+                    if (számRendben && (kiütés && (pontok[válasz - 1].érték == "$" || pontok[válasz - 1].érték == this.bábú))) { Console.WriteLine(e3); számRendben = false; }
+                    if (számRendben && !lépegetés && ((!kiütés) && pontok[válasz - 1].érték != "$")) { Console.WriteLine(e4); számRendben = false; }
+                    if (számRendben && lépegetés && pontok[válasz - 1].érték != this.bábú) { Console.WriteLine(e5); számRendben = false; }
+                    if (számRendben && !lépegetés && másodikÉrték)
+                    {
+                        int honnanSor = pontok[honnan - 1].sor;
+                        int honnanOszlop = pontok[honnan - 1].oszlop;
+                        int hovaSor = pontok[válasz - 1].sor;
+                        int hovaOszlop = pontok[válasz - 1].oszlop;
+                        if (honnanSor != hovaSor && honnanOszlop != hovaOszlop) { Console.WriteLine(e6); számRendben = false; }
+                        if (honnanSor == hovaSor && honnanOszlop == hovaOszlop) { Console.WriteLine(e7); számRendben = false; }
+                        bool vízszintesLépésRendben = true;
+                        bool függőlegesLépésRendben = true;
+
+                        #region-Vízszintes-lépés
+                        if (honnanSor == hovaSor)
+                        {
+                            //vízszintesen léptünk
+                            Pont[] sajátSorPontjai = pontok.Where(pont => pont.sor == pontok[honnan - 1].sor).ToArray();
+                            int s = Array.IndexOf(sajátSorPontjai, pontok[honnan - 1]);
+                            switch (s)
+                            {
+                                case 0:
+                                    if (sajátSorPontjai[1].id != pontok[válasz - 1].id) { vízszintesLépésRendben = false; }
+                                    break;
+                                case 1:
+                                    if (sajátSorPontjai[0].id != pontok[válasz - 1].id && sajátSorPontjai[2].id != pontok[válasz - 1].id) { vízszintesLépésRendben = false; }
+                                    break;
+                                case 2:
+                                    if (sajátSorPontjai[1].id != pontok[válasz - 1].id) { vízszintesLépésRendben = false; }
+                                    break;
+                            }
+                        }
+                        #endregion
+
+                        #region-Függőleges-lépés
+                        if (honnanOszlop == hovaOszlop)
+                        {
+                            //Függőlegesen léptünk
+                            Pont[] sajátOszlopPontjai = pontok.Where(pont => pont.oszlop == pontok[honnan - 1].oszlop).ToArray();
+                            int s = Array.IndexOf(sajátOszlopPontjai, pontok[honnan - 1]);
+                            switch (s)
+                            {
+                                case 0:
+                                    if (sajátOszlopPontjai[1].id != pontok[válasz - 1].id) { függőlegesLépésRendben = false; }
+                                    break;
+                                case 1:
+                                    if (sajátOszlopPontjai[0].id != pontok[válasz - 1].id && sajátOszlopPontjai[2].id != pontok[válasz - 1].id) { függőlegesLépésRendben = false; }
+                                    break;
+                                case 2:
+                                    if (sajátOszlopPontjai[1].id != pontok[válasz - 1].id) { függőlegesLépésRendben = false; }
+                                    break;
+                            }
+                        }
+                        #endregion
+
+                        if ((!függőlegesLépésRendben) || (!vízszintesLépésRendben)) { Console.WriteLine(e8); számRendben = false; }
+                    }
+
+                    #region-Van-E-Valid-Opció
+                    if (számRendben && lépegetés && !másodikÉrték)
+                    {
+                        //Megnézzük hogy van-e bármilyen lehetséges mozgás a lépegetés kiindulópontjából
+                        Pont[] sajátSorPontjai = pontok.Where(pont => pont.sor == pontok[válasz - 1].sor).ToArray();
+                        int s = Array.IndexOf(sajátSorPontjai, pontok[válasz - 1]);
+                        bool nemLehetSorbanLépni = false;
+                        switch (s)
+                        {
+                            case 0:
+                                if (sajátSorPontjai[1].érték != bábúk[0]) { nemLehetSorbanLépni = true; }
+                                break;
+                            case 1:
+                                if (sajátSorPontjai[0].érték != bábúk[0] && sajátSorPontjai[2].érték != bábúk[0]) { nemLehetSorbanLépni = true; }
+                                break;
+                            case 2:
+                                if (sajátSorPontjai[1].érték != bábúk[0]) { nemLehetSorbanLépni = true; }
+                                break;
+                        }
+
+                        Pont[] sajátOszlopPontjai = pontok.Where(pont => pont.oszlop == pontok[válasz - 1].oszlop).ToArray();
+                        int o = Array.IndexOf(sajátOszlopPontjai, pontok[válasz - 1]);
+                        bool nemLehetOszlopbanLépni = false;
+                        switch (o)
+                        {
+                            case 0:
+                                if (sajátOszlopPontjai[1].érték != bábúk[0]) { nemLehetOszlopbanLépni = true; }
+                                break;
+                            case 1:
+                                if (sajátOszlopPontjai[0].érték != bábúk[0] && sajátOszlopPontjai[2].érték != bábúk[0]) { nemLehetOszlopbanLépni = true; }
+                                break;
+                            case 2:
+                                if (sajátOszlopPontjai[1].érték != bábúk[0]) { nemLehetOszlopbanLépni = true; }
+                                break;
+                        }
+                        if (nemLehetSorbanLépni && nemLehetOszlopbanLépni) { Console.WriteLine(e9); számRendben = false; }
+                    }
+                    #endregion
+
+                } while (!számRendben);
+                return válasz;
+            }
+
+            public void malomRekordTörlés(int válasz)
+            {
+                int index = Array.FindIndex(malmok[this].ToArray(), malom => malom.Contains(pontok[válasz - 1].név));
+                malmok[this].Remove(malmok[this][index]);
+            }
+
+            public void MalomEllenőrzés()
+            {
+                //Minden sort és oszlopot megnézünk hogy van e 3 ugyanolyan érték
+                for (int i = 1; i < 9; i++)
+                {
+                    IEnumerable<Pont> sorPontjai = pontok.Where(pont => pont.sor == i);
+                    IEnumerable<Pont> oszlopPontjai = pontok.Where(pont => pont.oszlop == i);
+                    BelsőEllenőrzés(sorPontjai);
+                    BelsőEllenőrzés(oszlopPontjai);
+                }
+
+                void BelsőEllenőrzés(IEnumerable<Pont> pontok)
+                {
+                    string[] értékek = pontok.Select(pont => pont.érték).ToArray();       //Deklarálunk egy string tömböt az adott sor/oszlop pontjainak értékére
+                    if (!(értékek.Any(érték => érték != értékek[0])) && this.bábú == értékek[0])
+                    {
+                        string[] malomPontok = pontok.Select(pont => pont.név).ToArray(); //Megvizsgáljuk hogy bármelyik érték a fent létrehozott tömbben eltér-e a 0.dik elemtől és hogy az adott játékoshoz tartozik e.
+                        if (!(malmok[this].Any(malom => malom.SequenceEqual(malomPontok))))
+                        {
+                            Console.WriteLine($"{this.név}, malmod van! ({String.Join(" - ", malomPontok)})");
+                            malmok[this].Add(malomPontok);
+                            this.LerakásKérdezz(true); //Kiütés
+                        }
+                    }
+                }
+            }
+
+            public void SzámláljBábút()
+            {
+                this.bábúkSzáma = pontok.Where(pont => pont.érték == this.bábú).Count();
             }
         }
 
@@ -74,44 +251,6 @@ namespace Nine_Mens_Morris_Game
                     }
                 }
             }
-
-            public static void TáblaKiírás()
-            {
-                //Segédlet
-                Console.WriteLine($"Malom Játék {Environment.NewLine}{Environment.NewLine}Segédlet:{Environment.NewLine}");
-                Console.WriteLine($"{játékosok[0].név} bábúja: {játékosok[0].bábú}, bábúinak száma: {játékosok[0].bábúkSzáma}");
-                Console.WriteLine($"{játékosok[1].név} bábúja: {játékosok[1].bábú}, bábúinak száma: {játékosok[1].bábúkSzáma} {Environment.NewLine}");
-                Console.WriteLine("1-------------------2--------------------3");
-                Console.WriteLine("|                   |                    |");
-                Console.WriteLine("|    4--------------5--------------6     |");
-                Console.WriteLine("|    |              |              |     |");
-                Console.WriteLine("|    |       7------8------9       |     |");
-                Console.WriteLine("|    |       |             |       |     |");
-                Console.WriteLine("10---11------12            13------14----15");
-                Console.WriteLine("|    |       |             |       |     |");
-                Console.WriteLine("|    |       16-----17-----18      |     |");
-                Console.WriteLine("|    |              |              |     |");
-                Console.WriteLine("|    19-------------20-------------21    |");
-                Console.WriteLine("|                   |                    |");
-                Console.WriteLine("22------------------23------------------24");
-                //Játékfelület
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine($"{Environment.NewLine}{Environment.NewLine}Játéktábla:{Environment.NewLine}");
-                Console.WriteLine($"{pontok[0].érték}-------------------{pontok[1].érték}--------------------{pontok[2].érték}");
-                Console.WriteLine($"|                   |                    |");
-                Console.WriteLine($"|    {pontok[3].érték}--------------{pontok[4].érték}--------------{pontok[5].érték}     |");
-                Console.WriteLine($"|    |              |              |     |");
-                Console.WriteLine($"|    |       {pontok[6].érték}------{pontok[7].érték}------{pontok[8].érték}       |     |");
-                Console.WriteLine($"|    |       |             |       |     |");
-                Console.WriteLine($"{pontok[9].érték}----{pontok[10].érték}-------{pontok[11].érték}             {pontok[12].érték}-------{pontok[13].érték}-----{pontok[14].érték}");
-                Console.WriteLine($"|    |       |             |       |     |");
-                Console.WriteLine($"|    |       {pontok[15].érték}------{pontok[16].érték}------{pontok[17].érték}       |     |");
-                Console.WriteLine($"|    |              |              |     |");
-                Console.WriteLine($"|    {pontok[18].érték}--------------{pontok[19].érték}--------------{pontok[20].érték}     |");
-                Console.WriteLine($"|                   |                    |");
-                Console.WriteLine($"{pontok[21].érték}-------------------{pontok[22].érték}--------------------{pontok[23].érték}" + Environment.NewLine);
-                Console.ResetColor();
-            }
         }
 
         public class Játék
@@ -137,6 +276,17 @@ namespace Nine_Mens_Morris_Game
                     };  
                 }
             }
+
+            public static void Lerakás(List<Játékos> játékosok)
+            {
+                for (int i = 1; i <= 18; i++)
+                {
+                    int idx = ((i % 2 != 0) ? 0 : 1);
+                    játékosok[idx].LerakásKérdezz(false);
+                    játékosok[idx].MalomEllenőrzés();
+                    játékosok.ForEach(játékos => játékos.SzámláljBábút());
+                }
+            }
         }
 
 
@@ -149,7 +299,7 @@ namespace Nine_Mens_Morris_Game
             Játék.Köszöntő();
             Játék.JátékosokLétrehozása();
             Tábla.PontokLétrehozása();
-            Tábla.TáblaKiírás();
+            Játék.Lerakás(játékosok);
         }
     }
 }
