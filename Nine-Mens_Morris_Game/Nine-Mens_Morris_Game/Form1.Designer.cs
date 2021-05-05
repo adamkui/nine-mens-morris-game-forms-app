@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System;
 
 namespace Nine_Mens_Morris_Game
 {
@@ -847,17 +849,18 @@ namespace Nine_Mens_Morris_Game
                 picBoxes.Add(pictureBox23);
                 picBoxes.Add(pictureBox24);
                 #endregion
-                for(int i = 0; i < 24; i++)
+                string projectFolder = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+                for (int i = 0; i < 24; i++)
                 {
-                    if(value[i].érték == "$")
+                    if (value[i].érték == "$")
                     {
-                        picBoxes[i].ImageLocation = "D:/Programozás/C#/Nine-Mens-Morris-Game-FormsApp/Nine-Mens-Morris-Game-FormsApp/Nine-Mens_Morris_Game/Nine-Mens_Morris_Game/black_circle.png";
+                        picBoxes[i].ImageLocation = Path.Combine(projectFolder, "black_circle.png");
                     } else if(value[i].érték == "O")
                     {
-                        picBoxes[i].ImageLocation = "D:/Programozás/C#/Nine-Mens-Morris-Game-FormsApp/Nine-Mens-Morris-Game-FormsApp/Nine-Mens_Morris_Game/Nine-Mens_Morris_Game/blue_circle.png";
+                        picBoxes[i].ImageLocation = Path.Combine(projectFolder, "blue_circle.png");
                     } else if(value[i].érték == "X")
                     {
-                        picBoxes[i].ImageLocation = "D:/Programozás/C#/Nine-Mens-Morris-Game-FormsApp/Nine-Mens-Morris-Game-FormsApp/Nine-Mens_Morris_Game/Nine-Mens_Morris_Game/red_circle.png";
+                        picBoxes[i].ImageLocation = Path.Combine(projectFolder, "red_circle.png");
                     }
                 }
             }
