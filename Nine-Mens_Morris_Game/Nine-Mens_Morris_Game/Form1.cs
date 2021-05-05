@@ -15,6 +15,7 @@ namespace Nine_Mens_Morris_Game
         public MainForm()
         {
             InitializeComponent();
+            
         }
 
         private void picBoxTábla_Click(object sender, EventArgs e)
@@ -53,6 +54,11 @@ namespace Nine_Mens_Morris_Game
         }
 
         private void label25_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }

@@ -46,38 +46,64 @@ namespace Nine_Mens_Morris_Game
             {
                 int válasz;
                 string üzenet = kiütés ? $"{this.név}, adj meg egy számot kiütéshez" : $"{this.név}, adj meg egy számot";
-                MainForm mainForm = new MainForm();
-                mainForm.kérdés = üzenet;
+                válasz = VálaszValidálás(kiütés, false, false, üzenet);
+                pontok[válasz - 1].érték = kiütés ? bábúk[0] : this.bábú; //Tábla frissítése a játékos bábújával
+                if (kiütés && malmok[this].Any(malom => malom.Contains(pontok[válasz - 1].név))) { this.malomRekordTörlés(válasz); }
+            }
 
-                if (mainForm.ShowDialog() == DialogResult.OK)
+            public void LépegetésKérdezz()
+            {
+                int elsőVálasz = 0;
+                for (int i = 0; i < 2; i++)
                 {
-                    string input = mainForm.textBox1.Text;
-                    válasz = VálaszValidálás(kiütés, false, false, input);
-                    pontok[válasz - 1].érték = kiütés ? bábúk[0] : this.bábú; //Tábla frissítése a játékos bábújával
-                    if (kiütés && malmok[this].Any(malom => malom.Contains(pontok[válasz - 1].név))) { this.malomRekordTörlés(válasz); }
+                    int válasz;
+                    string üzenet = (i == 0) ? $"{this.név} adj meg egy számot ahonnan ellépsz" : $"{this.név} adj meg egy számot ahová ellépsz";
+                    válasz = (this.utolsóBábú) ? UtolsóKörösValidálás(i, üzenet) : VálaszValidálás(false, (i == 0) ? true : false, (i == 0) ? false : true, üzenet, (i == 0) ? 0 : elsőVálasz);
+                    elsőVálasz = (i == 0) ? válasz : elsőVálasz;
+                    if (i == 1)
+                    {
+                        pontok[elsőVálasz - 1].érték = bábúk[0];
+                        pontok[válasz - 1].érték = this.bábú;
+                    }
+                    if (malmok[this].Any(malom => malom.Contains(pontok[elsőVálasz - 1].név))) { this.malomRekordTörlés(válasz); }
+                    //Tábla kiírás!!!!?
                 }
             }
 
-            public int VálaszValidálás(bool kiütés, bool lépegetés, bool másodikÉrték, string input, int honnan = 0)
+            public void malomRekordTörlés(int válasz)
+            {
+                int index = Array.FindIndex(malmok[this].ToArray(), malom => malom.Contains(pontok[válasz - 1].név));
+                malmok[this].Remove(malmok[this][index]);
+            }
+
+            public int VálaszValidálás(bool kiütés, bool lépegetés, bool másodikÉrték, string üzenet, int honnan = 0)
             {
                 bool számRendben;
                 int válasz;
+                string input = "";
                 do
                 {
+                    MainForm mainForm = new MainForm();
+                    mainForm.kérdés = üzenet;
+                    mainForm.pontok = pontok;
+                    if (mainForm.ShowDialog() == DialogResult.OK)
+                    {
+                        input = mainForm.textBox1.Text;
+                    }
                     számRendben = int.TryParse(input, out válasz);
-                    if (!számRendben) { Console.WriteLine(e1); }
-                    if (számRendben && (válasz <= 0 || válasz >= 25)) { Console.WriteLine(e2); számRendben = false; }
-                    if (számRendben && (kiütés && (pontok[válasz - 1].érték == "$" || pontok[válasz - 1].érték == this.bábú))) { Console.WriteLine(e3); számRendben = false; }
-                    if (számRendben && !lépegetés && ((!kiütés) && pontok[válasz - 1].érték != "$")) { Console.WriteLine(e4); számRendben = false; }
-                    if (számRendben && lépegetés && pontok[válasz - 1].érték != this.bábú) { Console.WriteLine(e5); számRendben = false; }
+                    if (!számRendben) { MessageBox.Show(e1, "Hiba!"); }
+                    if (számRendben && (válasz <= 0 || válasz >= 25)) { MessageBox.Show(e2, "Hiba!"); számRendben = false; }
+                    if (számRendben && (kiütés && (pontok[válasz - 1].érték == "$" || pontok[válasz - 1].érték == this.bábú))) { MessageBox.Show(e3, "Hiba!"); számRendben = false; }
+                    if (számRendben && !lépegetés && ((!kiütés) && pontok[válasz - 1].érték != "$")) { MessageBox.Show(e4, "Hiba!"); számRendben = false; }
+                    if (számRendben && lépegetés && pontok[válasz - 1].érték != this.bábú) { MessageBox.Show(e5, "Hiba!"); számRendben = false; }
                     if (számRendben && !lépegetés && másodikÉrték)
                     {
                         int honnanSor = pontok[honnan - 1].sor;
                         int honnanOszlop = pontok[honnan - 1].oszlop;
                         int hovaSor = pontok[válasz - 1].sor;
                         int hovaOszlop = pontok[válasz - 1].oszlop;
-                        if (honnanSor != hovaSor && honnanOszlop != hovaOszlop) { Console.WriteLine(e6); számRendben = false; }
-                        if (honnanSor == hovaSor && honnanOszlop == hovaOszlop) { Console.WriteLine(e7); számRendben = false; }
+                        if (honnanSor != hovaSor && honnanOszlop != hovaOszlop) { MessageBox.Show(e6, "Hiba!"); számRendben = false; }
+                        if (honnanSor == hovaSor && honnanOszlop == hovaOszlop) { MessageBox.Show(e7, "Hiba!"); számRendben = false; }
                         bool vízszintesLépésRendben = true;
                         bool függőlegesLépésRendben = true;
 
@@ -123,7 +149,7 @@ namespace Nine_Mens_Morris_Game
                         }
                         #endregion
 
-                        if ((!függőlegesLépésRendben) || (!vízszintesLépésRendben)) { Console.WriteLine(e8); számRendben = false; }
+                        if ((!függőlegesLépésRendben) || (!vízszintesLépésRendben)) { MessageBox.Show(e8, "Hiba!"); számRendben = false; }
                     }
 
                     #region-Van-E-Valid-Opció
@@ -161,7 +187,7 @@ namespace Nine_Mens_Morris_Game
                                 if (sajátOszlopPontjai[1].érték != bábúk[0]) { nemLehetOszlopbanLépni = true; }
                                 break;
                         }
-                        if (nemLehetSorbanLépni && nemLehetOszlopbanLépni) { Console.WriteLine(e9); számRendben = false; }
+                        if (nemLehetSorbanLépni && nemLehetOszlopbanLépni) { MessageBox.Show(e9, "Hiba!"); számRendben = false; }
                     }
                     #endregion
 
@@ -169,10 +195,26 @@ namespace Nine_Mens_Morris_Game
                 return válasz;
             }
 
-            public void malomRekordTörlés(int válasz)
+            public int UtolsóKörösValidálás(int i, string üzenet)
             {
-                int index = Array.FindIndex(malmok[this].ToArray(), malom => malom.Contains(pontok[válasz - 1].név));
-                malmok[this].Remove(malmok[this][index]);
+                bool számRendben;
+                int válasz;
+                string input = "";
+                do
+                {
+                    MainForm mainForm = new MainForm();
+                    mainForm.kérdés = üzenet;
+                    mainForm.pontok = pontok;
+                    if (mainForm.ShowDialog() == DialogResult.OK)
+                    {
+                        input = mainForm.textBox1.Text;
+                    }
+                    számRendben = int.TryParse(input, out válasz);
+                    if (!számRendben) { MessageBox.Show(e1, "Hiba!"); }
+                    if (számRendben && (válasz <= 0 || válasz >= 25)) { MessageBox.Show(e2, "Hiba!"); számRendben = false; }
+                    if (számRendben && pontok[válasz - 1].érték != "$" && i == 1) { MessageBox.Show(e4, "Hiba!"); számRendben = false; }
+                } while (!számRendben);
+                return válasz;
             }
 
             public void MalomEllenőrzés()
@@ -194,7 +236,7 @@ namespace Nine_Mens_Morris_Game
                         string[] malomPontok = pontok.Select(pont => pont.név).ToArray(); //Megvizsgáljuk hogy bármelyik érték a fent létrehozott tömbben eltér-e a 0.dik elemtől és hogy az adott játékoshoz tartozik e.
                         if (!(malmok[this].Any(malom => malom.SequenceEqual(malomPontok))))
                         {
-                            Console.WriteLine($"{this.név}, malmod van! ({String.Join(" - ", malomPontok)})");
+                            MessageBox.Show($"{this.név}, malmod van! ({String.Join(" - ", malomPontok)})", "Malom!");
                             malmok[this].Add(malomPontok);
                             this.LerakásKérdezz(true); //Kiütés
                         }
@@ -205,24 +247,6 @@ namespace Nine_Mens_Morris_Game
             public void SzámláljBábút()
             {
                 this.bábúkSzáma = pontok.Where(pont => pont.érték == this.bábú).Count();
-            }
-        }
-
-        public class Pont
-        {
-            public int id;
-            public string név;
-            public int sor;
-            public int oszlop;
-            public string érték;
-
-            public Pont(int id, string név, int sor, int oszlop, string érték)
-            {
-                this.id = id;
-                this.név = név;
-                this.sor = sor;
-                this.oszlop = oszlop;
-                this.érték = érték;
             }
         }
 
@@ -257,7 +281,7 @@ namespace Nine_Mens_Morris_Game
         {
             public static void Köszöntő()
             {
-                MessageBox.Show("A játék engedélyezi a csiki csuki módszert, de nem javasoljuk használatát." + Environment.NewLine + "Jó játékot kívánunk! A továbbhaladáshoz nyomj meg egy gombot."); //Domi to customize
+                MessageBox.Show("A játék engedélyezi a csiki csuki módszert, de nem javasoljuk használatát. Jó játékot kívánunk!", "Köszöntő");
             }
 
             public static void JátékosokLétrehozása()
@@ -265,15 +289,14 @@ namespace Nine_Mens_Morris_Game
                 for (int i = 1; i < 3; i++)
                 {
                     string név;
-                    using (InputNameForm inputNameForm = new InputNameForm())
+                    InputNameForm inputNameForm = new InputNameForm();
+                    inputNameForm.label.Text = $"{i}. játékos, add meg a neved:";
+                    if (inputNameForm.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
                     {
-                        if (inputNameForm.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
-                        {
-                            név = inputNameForm.Név;
-                            játékosok.Add(new Játékos(név, bábúk[i], 0));
-                            malmok.Add(játékosok[i - 1], new List<string[]>());
-                        } 
-                    };  
+                        név = inputNameForm.Név;
+                        játékosok.Add(new Játékos(név, bábúk[i], 0));
+                        malmok.Add(játékosok[i - 1], new List<string[]>());
+                    }
                 }
             }
 
@@ -285,11 +308,27 @@ namespace Nine_Mens_Morris_Game
                     játékosok[idx].LerakásKérdezz(false);
                     játékosok[idx].MalomEllenőrzés();
                     játékosok.ForEach(játékos => játékos.SzámláljBábút());
+                    //Úgy mutasd a táblát ahogy levannak rakva a bábúk!
                 }
+                MessageBox.Show("Lerakás vége!", "Játék szakasz vége");
+            }
+
+            public static void Lépegetés(List<Játékos> játékosok)
+            {
+                int i = 1;
+                do
+                {
+                    MessageBox.Show($"{i}. lépegetés kör", "Lépegetés");
+                    int idx = ((i % 2 != 0) ? 0 : 1);
+                    játékosok[idx].LépegetésKérdezz();
+                    játékosok[idx].MalomEllenőrzés();
+                    játékosok.ForEach(játékos => játékos.SzámláljBábút());
+                    játékosok[idx].utolsóBábú = (játékosok[idx].bábúkSzáma < 4) ? true : false;
+                    i++;
+                } while (!játékosok.Any(p => p.bábúkSzáma < 3));
+                MessageBox.Show($"Játék vége! A nyertes: {játékosok.Where(p => p.bábúkSzáma > 2).ToArray()[0].név}", "Nyertél!");
             }
         }
-
-
 
         [STAThread]
         static void Main()
@@ -300,6 +339,7 @@ namespace Nine_Mens_Morris_Game
             Játék.JátékosokLétrehozása();
             Tábla.PontokLétrehozása();
             Játék.Lerakás(játékosok);
+            Játék.Lépegetés(játékosok);
         }
     }
 }
