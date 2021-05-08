@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Nine_Mens_Morris_Game
 {
@@ -66,7 +64,6 @@ namespace Nine_Mens_Morris_Game
                         pontok[válasz - 1].érték = this.bábú;
                     }
                     if (malmok[this].Any(malom => malom.Contains(pontok[elsőVálasz - 1].név))) { this.malomRekordTörlés(válasz); }
-                    //Tábla kiírás!!!!?
                 }
             }
 
@@ -236,7 +233,7 @@ namespace Nine_Mens_Morris_Game
                         string[] malomPontok = pontok.Select(pont => pont.név).ToArray(); //Megvizsgáljuk hogy bármelyik érték a fent létrehozott tömbben eltér-e a 0.dik elemtől és hogy az adott játékoshoz tartozik e.
                         if (!(malmok[this].Any(malom => malom.SequenceEqual(malomPontok))))
                         {
-                            MessageBox.Show($"{this.név}, malmod van! ({String.Join(" - ", malomPontok)})", "Malom!");
+                            MessageBox.Show($"{this.név}, malmod van! ({string.Join(" - ", malomPontok)})", "Malom!");
                             malmok[this].Add(malomPontok);
                             this.LerakásKérdezz(true); //Kiütés
                         }
@@ -283,20 +280,18 @@ namespace Nine_Mens_Morris_Game
             {
                 MessageBox.Show("A játék engedélyezi a csiki csuki módszert, de nem javasoljuk használatát. Jó játékot kívánunk!", "Köszöntő");
             }
-
+            
             public static void JátékosokLétrehozása()
             {
-                for (int i = 1; i < 3; i++)
+                using (Launcher launcher = new Launcher())
                 {
-                    string név;
-                    InputNameForm inputNameForm = new InputNameForm();
-                    inputNameForm.label.Text = $"{i}. játékos, add meg a neved:";
-                    if (inputNameForm.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
-                    {
-                        név = inputNameForm.Név;
-                        játékosok.Add(new Játékos(név, bábúk[i], 0));
-                        malmok.Add(játékosok[i - 1], new List<string[]>());
-                    }
+                    launcher.ShowDialog();
+
+                    játékosok.Add(new Játékos(l.textBox1.Text, bábúk[1], 0));
+                    malmok.Add(játékosok[0], new List<string[]>());
+
+                    játékosok.Add(new Játékos(l.textBox2.Text, bábúk[2], 0));
+                    malmok.Add(játékosok[1], new List<string[]>());
                 }
             }
 
